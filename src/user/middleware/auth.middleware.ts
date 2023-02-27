@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NestMiddleware } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NestMiddleware,
+} from '@nestjs/common';
 import { NextFunction, Response, Request } from 'express';
 import { verify } from 'jsonwebtoken';
 import { PrismaService } from '../../prisma.service';
@@ -17,14 +22,14 @@ export class AuthMiddleware implements NestMiddleware {
       return;
     }
 
-    if (req.method === "OPTIONS") {
+    if (req.method === 'OPTIONS') {
       next();
     }
 
     try {
       //Bearer 213213213wqeqweqwe
       const token = req.headers.authorization.split(' ')[1];
-      if (!token) new HttpException('Not authorized', HttpStatus.UNAUTHORIZED)
+      if (!token) new HttpException('Not authorized', HttpStatus.UNAUTHORIZED);
 
       const decoded = verify(token, process.env.JWT_SECRET);
 

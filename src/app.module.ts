@@ -14,10 +14,9 @@ import { PrismaService } from './prisma.service';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware).forRoutes({
+    consumer.apply(AuthMiddleware).forRoutes({
       path: '*',
       method: RequestMethod.ALL,
-    })
+    });
   }
 }

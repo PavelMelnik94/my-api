@@ -9,10 +9,12 @@ async function bootstrap() {
 
   //swagger
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('work-api')
+    .setDescription('api for my little projects')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('user')
+    .addTag('post')
+    .addTag('meta-information')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

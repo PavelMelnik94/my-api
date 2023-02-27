@@ -1,6 +1,16 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateMetaInformationDto } from './create-meta-information.dto';
+import { MetaInformation } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
 
-export class UpdateMetaInformationDto extends PartialType(
-  CreateMetaInformationDto,
-) {}
+export class UpdateMetaInformationDto {
+  @ApiProperty()
+  readonly title: MetaInformation['title'];
+
+  @ApiProperty()
+  readonly description: MetaInformation['description'];
+
+  @ApiProperty()
+  readonly logo: MetaInformation['logo'];
+
+  @ApiProperty()
+  readonly metaTags: MetaInformation['metaTags'];
+}

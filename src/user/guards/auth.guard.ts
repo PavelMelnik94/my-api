@@ -5,14 +5,12 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import { IUserExpressResponse } from "../types/userExpressResponse.interface";
+import { IUserExpressResponse } from '../types/userExpressResponse.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context
-      .switchToHttp()
-      .getRequest<IUserExpressResponse>();
+    const request = context.switchToHttp().getRequest<IUserExpressResponse>();
 
     if (request.body) return true;
 

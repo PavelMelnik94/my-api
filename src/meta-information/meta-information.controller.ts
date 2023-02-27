@@ -1,47 +1,36 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
-  Delete,
-} from '@nestjs/common';
+   UsePipes, ValidationPipe, UseGuards
+} from "@nestjs/common";
 import { MetaInformationService } from './meta-information.service';
-import { CreateMetaInformationDto } from './dto/create-meta-information.dto';
 import { UpdateMetaInformationDto } from './dto/update-meta-information.dto';
+import { AuthGuard } from "../user/guards/auth.guard";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('meta-information')
 @Controller('meta-information')
 export class MetaInformationController {
   constructor(
     private readonly metaInformationService: MetaInformationService,
   ) {}
 
-  @Post()
-  create(@Body() createMetaInformationDto: CreateMetaInformationDto) {
-    return this.metaInformationService.create(createMetaInformationDto);
-  }
-
   @Get()
-  findAll() {
-    return this.metaInformationService.findAll();
+  async getAllMetaInfo() {
+    return this.metaInformationService.getAllMetaInfo();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.metaInformationService.findOne(+id);
-  }
 
-  @Patch(':id')
-  update(
+  @Patch()
+  @UsePipes(new ValidationPipe())
+  @UseGuards(AuthGuard)
+  updateMetaInfo(
     @Param('id') id: string,
     @Body() updateMetaInformationDto: UpdateMetaInformationDto,
   ) {
-    return this.metaInformationService.update(+id, updateMetaInformationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.metaInformationService.remove(+id);
+    return this.metaInformationService.updateMetaInfo(+id, updateMetaInformationDto);
   }
 }

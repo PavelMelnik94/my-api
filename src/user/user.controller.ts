@@ -19,8 +19,10 @@ import {
 } from './types/userResponce.interface';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from ".prisma/client";
+import { User } from '.prisma/client';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -42,33 +44,23 @@ export class UserController {
 
   @Get(':id')
   async findOneById(@Param('id') id: string) {
-    const foundUser = await this.userService.findOneById(+id);
-
-    return foundUser ? foundUser : 'An account with this ID does not exist';
+    return await this.userService.findOneById(+id);
   }
 
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const updatedUser = await this.userService.updateUser({
+    return await this.userService.updateUser({
       id: +id,
       data: updateUserDto,
     });
-
-    return updatedUser
-      ? `Account with ID ${updatedUser.id} is updated`
-      : 'An account with this ID does not exist';
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
   async remove(@Param('id') id: string) {
-    const deletedUser = await this.userService.deleteUserById(+id);
-
-    return deletedUser
-      ? `Account with ID ${deletedUser.id} is deleted`
-      : 'An account with this ID does not exist';
+    return await this.userService.deleteUserById(+id);
   }
 
   @Post('login')
@@ -83,17 +75,10 @@ export class UserController {
   @Patch(':id/update-role')
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard)
-  async updateRole(
-    @Param('id') id: string,
-    @Body('role') role: User['role'],
-  ) {
-    const updatedRoleUser = await this.userService.updateRole({
+  async updateRole(@Param('id') id: string, @Body('role') role: User['role']) {
+    await this.userService.updateRole({
       id: +id,
-      role
+      role,
     });
-
-    return updatedRoleUser
-      ? `Account with ID ${updatedRoleUser.id} is updated`
-      : 'An account with this ID does not exist';
   }
 }
