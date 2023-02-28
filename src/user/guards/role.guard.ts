@@ -3,8 +3,8 @@ import {
   ExecutionContext,
   HttpException,
   HttpStatus,
+  Injectable,
 } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
 import { IUserExpressResponse } from '../types/userExpressResponse.interface';
 import { User } from '.prisma/client';
 

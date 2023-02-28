@@ -56,7 +56,7 @@ export class UserService {
     if (!foundUser) {
       throw new HttpException(
         `An account with id ${id} does not exist`,
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -77,7 +77,7 @@ export class UserService {
     if (!isExist) {
       throw new HttpException(
         `An account with id ${id} does not exist`,
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -105,7 +105,7 @@ export class UserService {
     if (!existUser) {
       throw new HttpException(
         `An account with id ${id} does not exist`,
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -130,7 +130,7 @@ export class UserService {
     if (!isExist) {
       throw new HttpException(
         `An account with id ${id} does not exist`,
-        HttpStatus.CONFLICT,
+        HttpStatus.NOT_FOUND,
       );
     }
 

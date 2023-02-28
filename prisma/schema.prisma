@@ -12,7 +12,7 @@ model User {
   email           String  @unique
   password        String
   userName        String?
-  createdAt       DateTime            @default(now())
+  createdAt       DateTime @default(now())
   posts           Post[]
   role            Role?   @default(USER)
 }
@@ -24,19 +24,34 @@ enum Role {
 }
 
 model Post {
-  id          Int      @default(autoincrement()) @id
+  id          Int           @default(autoincrement()) @id
   title       String
   content     String
-  createdAt       DateTime            @default(now())
-  published   Boolean? @default(false)
-  author      User?    @relation(fields: [authorId], references: [id])
+  createdAt   DateTime      @default(now())
+  published   Boolean?      @default(false)
+  author      User?         @relation(fields: [authorId], references: [id])
   authorId    Int?
 }
 
 model MetaInformation {
-  id          Int      @default(autoincrement()) @id
-  title        String   @unique @default("My site")
-  description  String   @unique @default("Description of my site")
+  id           Int          @default(autoincrement()) @id
+  title        String       @unique @default("My site")
+  description  String       @unique @default("Description of my site")
   logo         String
-  metaTags     String[] @default(["ecommerce", "finance"])
+  metaTags     String[]     @default(["ecommerce", "finance"])
+}
+
+
+model Todo {
+  id           Int          @default(autoincrement()) @id
+  title        String
+  description  String
+  createdAt    DateTime     @default(now())
+  state        TodoState?   @default(TODO)
+}
+
+enum TodoState {
+  TODO
+  IN_PROGRESS
+  DONE
 }

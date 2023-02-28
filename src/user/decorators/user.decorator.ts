@@ -1,4 +1,4 @@
-import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { IUserExpressResponse } from '../types/userExpressResponse.interface';
 
 export const UserInfo = createParamDecorator(

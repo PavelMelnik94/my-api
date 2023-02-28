@@ -1,11 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
-  Body,
   Patch,
+  UseGuards,
   UsePipes,
   ValidationPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { MetaInformationService } from './meta-information.service';
 import { UpdateMetaInformationDto } from './dto/update-meta-information.dto';

@@ -4,7 +4,7 @@ import {
   Injectable,
   NestMiddleware,
 } from '@nestjs/common';
-import { NextFunction, Response} from 'express';
+import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { PrismaService } from '../../prisma.service';
 import { IUserExpressResponse } from '../types/userExpressResponse.interface';

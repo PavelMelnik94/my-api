@@ -48,7 +48,11 @@ export class PostService {
       },
     });
 
-    return existPost ? existPost : { message: 'not found' };
+    if (!existPost) {
+      return new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    return existPost;
   }
 
   async updatePost(id: number, updatePostDto: UpdatePostDto): Promise<Post> {
@@ -61,7 +65,7 @@ export class PostService {
     if (!foundPost) {
       throw new HttpException(
         `An post with id ${id} does not exist`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -83,7 +87,7 @@ export class PostService {
     if (!foundPost) {
       throw new HttpException(
         `An post with id ${id} does not exist`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
       );
     }
 

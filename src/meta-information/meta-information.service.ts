@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { UpdateMetaInformationDto } from './dto/update-meta-information.dto';
 import { PrismaService } from '../prisma.service';
 
-
 @Injectable()
 export class MetaInformationService {
   constructor(private readonly prisma: PrismaService) {}
