@@ -1,7 +1,6 @@
-import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '.prisma/client';
-import { Post } from '@prisma/client';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -17,5 +16,5 @@ export class CreateUserDto {
   readonly password: User['password'];
 
   @ApiProperty()
-  readonly createdAt: User['createdAt']
+  readonly createdAt: User['createdAt'];
 }

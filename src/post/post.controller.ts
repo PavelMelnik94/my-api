@@ -16,8 +16,8 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '../user/guards/auth.guard';
 import { UserInfo } from '../user/decorators/user.decorator';
 import { User } from '.prisma/client';
-import { ApiTags } from "@nestjs/swagger";
-
+import { ApiTags } from '@nestjs/swagger';
+import { RoleGuard } from '../user/guards/role.guard';
 
 @ApiTags('post')
 @Controller('post')
@@ -46,6 +46,7 @@ export class PostController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
+  @UseGuards(new RoleGuard(['ADMIN', 'SUPERADMIN']))
   @UsePipes(new ValidationPipe())
   async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return await this.postService.updatePost(+id, updatePostDto);
@@ -53,6 +54,7 @@ export class PostController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
+  @UseGuards(new RoleGuard(['ADMIN', 'SUPERADMIN']))
   async remove(@Param('id') id: string) {
     return await this.postService.remove(+id);
   }

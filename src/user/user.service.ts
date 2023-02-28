@@ -14,21 +14,17 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createUser(data: Prisma.UserCreateInput): Promise<User | any> {
-    try {
-      const isAlreadyExist = await this.prisma.user.findUnique({
-        where: {
-          email: data.email,
-        },
-      });
+    const isAlreadyExist = await this.prisma.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
 
-      if (isAlreadyExist) {
-        throw new HttpException('Account already exist', HttpStatus.CONFLICT);
-      }
-
-      return await this.prisma.user.create({ data });
-    } catch (e) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
+    if (isAlreadyExist) {
+      throw new HttpException('Account already exist', HttpStatus.CONFLICT);
     }
+
+    return this.prisma.user.create({ data });
   }
 
   async getAllUsers(params: {
@@ -38,175 +34,151 @@ export class UserService {
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
-    try {
-      const { skip, take, cursor, where, orderBy } = params;
-      return await this.prisma.user.findMany({
-        skip,
-        take,
-        cursor,
-        where,
-        orderBy,
-      });
-    } catch (e) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
-    }
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.user.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
   async findOneById(
     id: Prisma.UserWhereUniqueInput['id'],
   ): Promise<User | TInformationResponse> {
-    try {
-      // Find user by ID
-      const foundUser = await this.prisma.user.findUnique({
-        where: { id },
-        include: { posts: true },
-      });
+    // Find user by ID
+    const foundUser = await this.prisma.user.findUnique({
+      where: { id },
+      include: { posts: true },
+    });
 
-      if (!foundUser) {
-        throw new HttpException(
-          `An account with id ${id} does not exist`,
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      }
-
-      return foundUser
-        ? foundUser
-        : { message: 'An account with this ID does not exist' };
-    } catch (err) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
+    if (!foundUser) {
+      throw new HttpException(
+        `An account with id ${id} does not exist`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
+
+    return foundUser
+      ? foundUser
+      : { message: 'An account with this ID does not exist' };
   }
 
   async updateUser(params: {
     id: Prisma.UserWhereUniqueInput['id'];
     data: Prisma.UserUpdateInput;
   }): Promise<User | any> {
-    try {
-      const { id, data } = params;
-      const isExist = await this.prisma.user.findUnique({
-        where: { id },
-      });
+    const { id, data } = params;
+    const isExist = await this.prisma.user.findUnique({
+      where: { id },
+    });
 
-      if (!isExist) {
-        throw new HttpException(
-          `An account with id ${id} does not exist`,
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      }
-
-      const newBody = Object.entries(data).reduce((acc, [key, value]) => {
-        if (key === 'id') return null;
-        else return { ...acc, [key]: value };
-      }, {});
-
-      return await this.prisma.user.update({
-        where: { id },
-        data: newBody,
-      });
-    } catch (e) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
+    if (!isExist) {
+      throw new HttpException(
+        `An account with id ${id} does not exist`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
+
+    const newBody = Object.entries(data).reduce((acc, [key, value]) => {
+      if (key === 'id') return null;
+      else return { ...acc, [key]: value };
+    }, {});
+
+    return this.prisma.user.update({
+      where: { id },
+      data: newBody,
+    });
   }
 
   async updateRole(params: {
     id: Prisma.UserWhereUniqueInput['id'];
     role: User['role'];
   }): Promise<User | any> {
-    try {
-      const { id, role } = params;
+    const { id, role } = params;
 
-      const existUser = await this.prisma.user.findUnique({
-        where: { id },
-      });
+    const existUser = await this.prisma.user.findUnique({
+      where: { id },
+    });
 
-      if (!existUser) {
-        throw new HttpException(
-          `An account with id ${id} does not exist`,
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      }
-
-      const updatedUser = {
-        ...existUser,
-        role,
-      };
-
-      return await this.prisma.user.update({
-        where: { id },
-        data: updatedUser,
-      });
-    } catch (e) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
+    if (!existUser) {
+      throw new HttpException(
+        `An account with id ${id} does not exist`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
+
+    const updatedUser = {
+      ...existUser,
+      role,
+    };
+
+    return this.prisma.user.update({
+      where: { id },
+      data: updatedUser,
+    });
   }
 
   async deleteUserById(
     id: Prisma.UserWhereUniqueInput['id'],
   ): Promise<User | TInformationResponse> {
-    try {
-      const isExist = await this.prisma.user.findUnique({
-        where: { id },
-      });
+    const isExist = await this.prisma.user.findUnique({
+      where: { id },
+    });
 
-      if (!isExist) {
-        throw new HttpException(
-          `An account with id ${id} does not exist`,
-          HttpStatus.CONFLICT,
-        );
-      }
-
-      const deletedUser = await this.prisma.user.delete({
-        where: {
-          id,
-        },
-      });
-
-      return !deletedUser
-        ? { message: `Account with ID ${deletedUser.id} is deleted` }
-        : { error: 'Something wrong' };
-    } catch (e) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
+    if (!isExist) {
+      throw new HttpException(
+        `An account with id ${id} does not exist`,
+        HttpStatus.CONFLICT,
+      );
     }
+
+    const deletedUser = await this.prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+
+    return !deletedUser
+      ? { message: `Account with ID ${deletedUser.id} is deleted` }
+      : { error: 'Something wrong' };
   }
 
   async login(loginUserDto: LoginUserDto): Promise<User | any> {
-    try {
-      const inputUser = await this.prisma.user.findFirst({
-        where: { email: loginUserDto.email },
-        select: {
-          email: true,
-          id: true,
-          password: true,
-          userName: true,
-          role: true,
-          posts: true,
-        },
-      });
+    const inputUser = await this.prisma.user.findFirst({
+      where: { email: loginUserDto.email },
+      select: {
+        email: true,
+        id: true,
+        password: true,
+        userName: true,
+        role: true,
+        posts: true,
+      },
+    });
 
-      if (!inputUser) {
-        throw new HttpException(
-          'Email or password is wrong',
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      }
-
-      const { password: inputPassword } = loginUserDto;
-      const { password: existPassword } = inputUser;
-      const isPasswordCorrect = await compare(inputPassword, existPassword);
-
-      if (!isPasswordCorrect) {
-        throw new HttpException(
-          'Email or password is wrong',
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      }
-
-      delete inputUser.password;
-
-      return inputUser;
-    } catch (e) {
-      throw new HttpException('Something wrong', HttpStatus.BAD_REQUEST);
+    if (!inputUser) {
+      throw new HttpException(
+        'Email or password is wrong',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
+
+    const { password: inputPassword } = loginUserDto;
+    const { password: existPassword } = inputUser;
+    const isPasswordCorrect = await compare(inputPassword, existPassword);
+
+    if (!isPasswordCorrect) {
+      throw new HttpException(
+        'Email or password is wrong',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    delete inputUser.password;
+
+    return inputUser;
   }
 
   generateJWT(user: User): string {

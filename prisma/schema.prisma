@@ -34,6 +34,7 @@ model Post {
 }
 
 model MetaInformation {
+  id          Int      @default(autoincrement()) @id
   title        String   @unique @default("My site")
   description  String   @unique @default("Description of my site")
   logo         String

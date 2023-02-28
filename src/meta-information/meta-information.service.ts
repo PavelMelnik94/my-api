@@ -1,28 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateMetaInformationDto } from './dto/update-meta-information.dto';
-import { PrismaService } from "../prisma.service";
-import { MetaInformation } from "@prisma/client";
+import { PrismaService } from '../prisma.service';
+
 
 @Injectable()
 export class MetaInformationService {
-constructor(private readonly prisma: PrismaService) {
-}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getAllMetaInfo() {
-    return this.prisma.metaInformation.findMany({
-      select: {
-        metaTags: true,
-        logo: false,
-        title: true,
-        description: true
-      }
+    return this.prisma.metaInformation.findFirst({
+      where: {
+        id: 1,
+      },
     });
   }
 
-
-  async updateMetaInfo(id: number, updateMetaInformationDto: UpdateMetaInformationDto) {
-    return `This action updates a #${id} metaInformation`;
+  async updateMetaInfo(newData: UpdateMetaInformationDto) {
+    return this.prisma.metaInformation.update({
+      where: { id: 1 },
+      data: newData,
+    });
   }
-
-
 }

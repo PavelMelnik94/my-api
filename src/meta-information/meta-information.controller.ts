@@ -3,13 +3,14 @@ import {
   Get,
   Body,
   Patch,
-  Param,
-   UsePipes, ValidationPipe, UseGuards
-} from "@nestjs/common";
+  UsePipes,
+  ValidationPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { MetaInformationService } from './meta-information.service';
 import { UpdateMetaInformationDto } from './dto/update-meta-information.dto';
-import { AuthGuard } from "../user/guards/auth.guard";
-import { ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from '../user/guards/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('meta-information')
 @Controller('meta-information')
@@ -20,17 +21,13 @@ export class MetaInformationController {
 
   @Get()
   async getAllMetaInfo() {
-    return this.metaInformationService.getAllMetaInfo();
+    return await this.metaInformationService.getAllMetaInfo();
   }
-
 
   @Patch()
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard)
-  updateMetaInfo(
-    @Param('id') id: string,
-    @Body() updateMetaInformationDto: UpdateMetaInformationDto,
-  ) {
-    return this.metaInformationService.updateMetaInfo(+id, updateMetaInformationDto);
+  async updateMetaInfo(@Body() newBody: UpdateMetaInformationDto) {
+    return await this.metaInformationService.updateMetaInfo(newBody);
   }
 }

@@ -20,7 +20,8 @@ import {
 import { AuthGuard } from './guards/auth.guard';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from '.prisma/client';
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags } from '@nestjs/swagger';
+import { RoleGuard } from './guards/role.guard';
 
 @ApiTags('user')
 @Controller('user')
@@ -59,6 +60,7 @@ export class UserController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
+  @UseGuards(new RoleGuard(['ADMIN', 'SUPERADMIN']))
   async remove(@Param('id') id: string) {
     return await this.userService.deleteUserById(+id);
   }
@@ -73,8 +75,9 @@ export class UserController {
   }
 
   @Patch(':id/update-role')
-  @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard)
+  @UseGuards(new RoleGuard(['ADMIN', 'SUPERADMIN']))
+  @UsePipes(new ValidationPipe())
   async updateRole(@Param('id') id: string, @Body('role') role: User['role']) {
     await this.userService.updateRole({
       id: +id,
