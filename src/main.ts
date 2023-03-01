@@ -4,7 +4,9 @@ import { PrismaService } from './prisma.service';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    snapshot: true
+  });
   app.setGlobalPrefix('api');
 
   //swagger
